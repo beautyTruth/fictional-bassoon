@@ -113,6 +113,22 @@ const canvasCTX = canvasEl.getContext("2d");
 canvasEl.height = window.innerHeight;
 canvasEl.width = window.innerWidth;
 
+let mouseEffect = {
+  x: undefined,
+  y: undefined,
+};
+
+let maxiRadius = 70;
+let miniRadius = 5;
+
+// mouseMoveEvent listener
+
+window.addEventListener("mousemove", (e) => {
+  mouseEffect.x = e.x;
+  mouseEffect.y = e.y;
+  console.log(mouseEffect);
+});
+
 // RunBalls Class
 
 class RunBalls {
@@ -135,7 +151,7 @@ class RunBalls {
     canvasCTX.fill();
   };
 
-  // collision detection on the edges
+  // collision detection on the edges (responsible for the movement also)
   updateMyBalls = function () {
     //right and left
     if (this.xP + this.radius > canvasEl.width || this.xP - this.radius < 0) {
@@ -149,6 +165,21 @@ class RunBalls {
     this.xP += this.xV;
     this.yP += this.yV;
 
+    // mouse move effect
+
+    if (
+      mouseEffect.x - this.xP < 20 &&
+      mouseEffect.x - this.xP > -20 &&
+      mouseEffect.y - this.yP < 20 &&
+      mouseEffect.y - this.yP > -20
+    ) {
+      if (this.radius < maxiRadius) {
+        this.radius += 1;
+      }
+    } else if (this.radius > miniRadius) {
+      this.radius -= 1;
+    }
+
     this.drawMyBalls();
   };
 }
@@ -157,8 +188,8 @@ class RunBalls {
 
 let ballsArray = [];
 
-for (let b = 0; b < 500; b++) {
-  let radius = 30;
+for (let b = 0; b < 1000; b++) {
+  let radius = 10;
   let xP = Math.random() * (canvasEl.width - radius * 2) + radius;
   let yP = Math.random() * (canvasEl.height - radius * 2) + radius;
   let xV = (Math.random() - 0.5) * 2;
@@ -169,8 +200,6 @@ for (let b = 0; b < 500; b++) {
 
   ballsArray.push(new RunBalls(xP, yP, xV, yV, radius, red, green, blue));
 }
-
-console.log(ballsArray);
 
 // =-=-=-=-=-=-=-=-==-- THE GAME LOOP =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
