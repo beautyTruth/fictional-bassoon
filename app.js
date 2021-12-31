@@ -73,6 +73,7 @@
 
 // // balls Array
 // let ballsArray = [];
+
 // for (let i = 0; i < 1000; i++) {
 //   let radius = 30;
 //   let xP = Math.random() * (canvasEl.width - radius * 2) + radius;
@@ -130,8 +131,8 @@ class RunBalls {
   drawMyBalls = function () {
     canvasCTX.fillStyle = `rgb(${this.red}, ${this.green}, ${this.blue})`;
     canvasCTX.beginPath();
-    canvasCTX.arc(this.xP, this.yP, this.radius, 0, Math.PI);
-    canvasCTX.fill;
+    canvasCTX.arc(this.xP, this.yP, this.radius, 0, Math.PI * 2);
+    canvasCTX.fill();
   };
 
   // collision detection on the edges
@@ -147,14 +148,39 @@ class RunBalls {
 
     this.xP += this.xV;
     this.yP += this.yV;
+
+    this.drawMyBalls();
   };
 }
 
-// the game loop
+// BALLS ARRAY =-=-=-=-=-=-=-=-==--=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+let ballsArray = [];
+
+for (let b = 0; b < 500; b++) {
+  let radius = 30;
+  let xP = Math.random() * (canvasEl.width - radius * 2) + radius;
+  let yP = Math.random() * (canvasEl.height - radius * 2) + radius;
+  let xV = (Math.random() - 0.5) * 2;
+  let yV = (Math.random() - 0.5) * 2;
+  let red = Math.ceil(Math.random() * 255);
+  let green = Math.ceil(Math.random() * 255);
+  let blue = Math.ceil(Math.random() * 255);
+
+  ballsArray.push(new RunBalls(xP, yP, xV, yV, radius, red, green, blue));
+}
+
+console.log(ballsArray);
+
+// =-=-=-=-=-=-=-=-==-- THE GAME LOOP =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
 
 function animateBalls() {
   requestAnimationFrame(animateBalls);
   canvasCTX.clearRect(0, 0, canvasEl.width, canvasEl.height);
+
+  for (let w = 0; w < ballsArray.length; w++) {
+    ballsArray[w].updateMyBalls();
+  }
 }
 
 animateBalls();
